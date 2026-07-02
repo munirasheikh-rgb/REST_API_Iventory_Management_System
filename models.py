@@ -5,7 +5,7 @@ class Product:
         self.brand = brand
         self.category = category
         self.price = price
-
+#converting my product to a dictionary
     def to_dict(self):
         return ({
             "id":self.id ,

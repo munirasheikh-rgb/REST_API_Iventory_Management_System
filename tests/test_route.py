@@ -29,6 +29,7 @@ def test_product_not_found():
 def tests_add_new_product():
     """adds new product to the list"""
     client = app.test_client()  
+    initial_count = len(products)
     new_product = {
         "name":"Rice",
         "brand":"Dawati",
@@ -43,5 +44,22 @@ def tests_add_new_product():
     assert data["category"] =="grains"
     assert data["price"] == 450
     assert "id" in data
+    assert len(products) == initial_count + 1
     
-        
+def tests_update_product():
+    """Updates the existing product"""
+    client = app.test_client() 
+    update_data ={"price":600}
+    response = client.patch("/products/1",json=update_data) 
+    assert response.status_code == 200
+    data =response.get_json()
+    assert data["id"]==1
+    assert data["price"] == 600
+
+def tests_delete_product():
+    """deletes a product by id"""
+    client = app.test_client() 
+    response = client.delete("/products/2")
+    assert response.status_code == 200
+    data =response.get_json()
+    assert data["message"] == "Product deleted successfully!"
