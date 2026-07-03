@@ -63,3 +63,32 @@ def tests_delete_product():
     assert response.status_code == 200
     data =response.get_json()
     assert data["message"] == "Product deleted successfully!"
+
+def test_external_product_route():
+    """fetch product details from an external API by querrying barcode"""
+    client = app.test_client() 
+    response = client.get("/external-product?barcode=737628064502")
+    data = response.get_json()
+    assert response.status_code ==200
+    assert "barcode" in data
+    assert "brand" in data
+    assert "category" in data
+    assert "name" in data
+def test_import_external_product():
+   """adds an external product from the API to the products list"""
+   client = app.test_client() 
+   initial_count = len(products)
+
+   response =client.post("/products/import?barcode=737628064502")
+   assert response.status_code == 201
+   data = response.get_json()
+   assert"id" in data
+   assert"name" in data
+   assert"brand" in data
+   assert"category" in data
+   assert"price" in data
+
+  
+   
+
+   
