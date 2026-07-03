@@ -1,4 +1,5 @@
 from flask import Flask,jsonify,request
+from external_api import search_product
 from models import Product
 app = Flask(__name__)
 
@@ -75,6 +76,39 @@ def remove_product(id):
         return jsonify({"error":"Product not found"}),404
     products = [p for p in products if p.id != id]
     return jsonify ({"message":"Product deleted successfully!"}),200
+
+@app.route("/external-product")
+def external_product():
+    barcode =request.args.get("barcode")
+    data = search_product(barcode)
+    product = data.get("product",{})
+    
+    return jsonify(
+        {
+            "barcode":data.get("code"),
+            "name":product.get("Product_name") or "unknown product",
+            "brand":product.get("brands"),
+            "category":product.get("categories"),
+
+        }
+    )
+@app.route("/products/import",methods=["POST"])
+def import_external_product():
+    barcode=request.args.get("barcode")
+    if not barcode:
+        return jsonify({"error":"Barcode is required"}),400
+    data =search_product(barcode)
+    product_data = data.get("product",{})
+    new_id =max([p.id for p in products]) +1 if products else 1
+    new_product =Product(
+        new_id,
+        product_data.get("product_name") or "unknown product",
+        product_data.get("brands") or "unknown brand",
+        product_data.get ("categories") or "unknown category",
+        0
+    )
+    products.append(new_product)
+    return jsonify(new_product.to_dict()),201
 
 
 
