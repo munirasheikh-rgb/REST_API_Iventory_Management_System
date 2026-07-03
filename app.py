@@ -77,28 +77,31 @@ def remove_product(id):
     products = [p for p in products if p.id != id]
     return jsonify ({"message":"Product deleted successfully!"}),200
 
+#fetch product details from an external aApi using a barcode
 @app.route("/external-product")
 def external_product():
-    barcode =request.args.get("barcode")
-    data = search_product(barcode)
+    barcode =request.args.get("barcode")#
+    data = search_product(barcode)#searching for a product using external API
     product = data.get("product",{})
     
     return jsonify(
         {
             "barcode":data.get("code"),
-            "name":product.get("Product_name") or "unknown product",
+            "name":product.get("product_name") or "unknown product", # returning only the required product details
             "brand":product.get("brands"),
             "category":product.get("categories"),
 
         }
     )
+#Importing a product from the external API into the local inventory (product) list
 @app.route("/products/import",methods=["POST"])
 def import_external_product():
     barcode=request.args.get("barcode")
     if not barcode:
-        return jsonify({"error":"Barcode is required"}),400
+        return jsonify({"error":"Barcode is required"}),400# returning an error if no barcode is provided
     data =search_product(barcode)
     product_data = data.get("product",{})
+    #generating a new id dynamically for the new imported product
     new_id =max([p.id for p in products]) +1 if products else 1
     new_product =Product(
         new_id,
@@ -107,7 +110,7 @@ def import_external_product():
         product_data.get ("categories") or "unknown category",
         0
     )
-    products.append(new_product)
+    products.append(new_product) # adding the imported product  to invetory list
     return jsonify(new_product.to_dict()),201
 
 
