@@ -33,7 +33,9 @@ def update_product(args):
    response =requests.patch(f"{URL}/{args.id}",json=updates)  
    print(response.json())
    
-   
+def delete_product(args):
+   response =requests.delete(f"{URL}/{args.id}")
+   print(response.json())   
 
 parser = argparse.ArgumentParser(description="Inventory Management CLI")
 
@@ -54,6 +56,8 @@ update_parser.add_argument("--brand")
 update_parser.add_argument("--category")
 update_parser.add_argument("--price",type=int)
 
+delete_parser = subparsers.add_parser("delete")
+delete_parser.add_argument("id",type=int)
 
 
 if __name__ == "__main__":
@@ -64,3 +68,5 @@ if __name__ == "__main__":
     add_product(args)
  if args.command == "update" :
     update_product(args)  
+ if args.command == "delete":
+    delete_product(args)

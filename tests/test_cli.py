@@ -1,4 +1,4 @@
-from cli import list_products,add_product,update_product
+from cli import list_products,add_product,update_product,delete_product
 class Args:
     name ="Rice"
     brand = "Dawat"
@@ -64,3 +64,10 @@ def test_update_products(capsys):
        assert "Brookside" in captured.out
        assert "dairy" in captured.out
        assert "75" in captured.out
+
+class DeleteArgs:
+       id = 3       
+def test_delete_product(capsys):
+      delete_product(DeleteArgs)
+      captured = capsys.readouterr()
+      assert "Product deleted successfully!" in captured.out
