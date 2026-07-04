@@ -2,10 +2,14 @@ import argparse
 import requests
 #url for the Flask API
 URL =  "http://127.0.0.1:5555/products"
-#retrive an display all products from inventory
+#retrive and display all products from inventory
 def list_products():
-    response = requests.get(URL)
-    print(response.json())
+    try:
+        response = requests.get(URL)
+        print(response.json())
+    except requests.exceptions.RequestException:
+       print("Could not connect to the API")
+
 #create and send a new product to the API
 def add_product(args):
     product = {
@@ -14,9 +18,12 @@ def add_product(args):
         "category":args.category,
         "price":args.price
     }
-
-    response = requests.post(URL,json=product)
-    print(response.json())
+    try:
+        response = requests.post(URL,json=product)
+        print(response.json())
+    except requests.exceptions.RequestException:
+      print("Could not connect to the API")
+    
 
 #updating one or more fields of an existing product
 def update_product(args):   
@@ -30,13 +37,20 @@ def update_product(args):
    if args.price:
       updates["price"]=args.price
 
-   response =requests.patch(f"{URL}/{args.id}",json=updates)  
-   print(response.json())
+   try:
+    response =requests.patch(f"{URL}/{args.id}",json=updates)  
+    print(response.json())
+   except requests.exceptions.RequestException:
+      print("Could not connect to the API")
   #delete a product by id 
 def delete_product(args):
-   response =requests.delete(f"{URL}/{args.id}")
-   print(response.json())   
-
+   
+   try:
+    response =requests.delete(f"{URL}/{args.id}")
+    print(response.json())   
+   except requests.exceptions.RequestException:
+       print("Could not connect to the API")
+      
 parser = argparse.ArgumentParser(description="Inventory Management CLI")
 
 subparsers =parser.add_subparsers(dest="command")
@@ -48,7 +62,7 @@ add_parser.add_argument("--brand",required=True,help="provide the brand of the p
 add_parser.add_argument("--category",required=True,help="add a category")
 add_parser.add_argument("--price",required=True,type=int,help="add price of the item")
 
-#update product command an its optional arguments
+#update product command and its optional arguments
 update_parser = subparsers.add_parser("update",help="Add a product to update or edit")
 update_parser.add_argument("id",type=int)
 update_parser.add_argument("--name")
@@ -64,9 +78,11 @@ if __name__ == "__main__":
  args = parser.parse_args()
  if args.command == "list":
     list_products()
- if args.command == "add": 
+ elif args.command == "add": 
     add_product(args)
- if args.command == "update" :
+ elif args.command == "update" :
     update_product(args)  
- if args.command == "delete":
+ elif args.command == "delete":
     delete_product(args)
+ else:
+    parser.print_help() 

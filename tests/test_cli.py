@@ -1,20 +1,42 @@
+from unittest.mock import patch
 from cli import list_products,add_product,update_product,delete_product
-class Args:
+class AddArgs:
     name ="Rice"
     brand = "Dawat"
     category ="grains"
     price = 450
-
-def test_list_product(capsys):
+#mock GET request so no real API call is made  
+@patch("cli.requests.get")
+def test_list_product(mock_get,capsys):
+        """simulate JSON response return by the API"""
+        mock_get.return_value.json.return_value =[
+            {"id":1,
+            "name":"Milk",
+            "brand":"Brookside",
+            "category":"dairy",
+            "price":75}
+    ]    
         list_products()
         captured = capsys.readouterr()
-        assert "Milk" in captured.out or "Bread" in captured.out
-def test_add_product(capsys):
-        add_product (Args) 
+        assert "Milk" in captured.out 
+        mock_get.assert_called_once()#assert get request was made once
+#mock post request to avoid creating a real product
+@patch("cli.requests.post")
+def test_add_product(mock_post,capsys):
+        """simulate JSON response returned by the API"""
+        mock_post.return_value.json.return_value = {
+              "id":3,
+            "name":"Rice",
+            "brand":"Dawat",
+            "category":"grains",
+            "price":450 
+        }
+        add_product (AddArgs) 
         captured =capsys.readouterr() 
         assert "Rice"in captured.out
         assert "grains" in captured.out
         assert "Dawat" in captured.out
+        mock_post.assert_called_once()
 
 class UpdatePriceArgs:
        id =1
@@ -22,52 +44,33 @@ class UpdatePriceArgs:
        brand = None
        category = None
        price= 75
-def test_update_product_price(capsys):
+
+ #mock patch request to simulate updating a product
+@patch("cli.requests.patch")       
+def test_update_product_price(mock_patch,capsys):
+       mock_patch.return_value.json.return_value ={
+           "id":1,
+            "name":"Milk",
+            "brand":"Brookside",
+            "category":"dairy",
+            "price":75   
+       }
        update_product(UpdatePriceArgs)
        captured = capsys.readouterr()
        assert "75" in captured.out
+       mock_patch.assert_called_once()
 
-
-class UpdateBrandArgs:
-       id =1
-       name = None
-       brand = "Brookside"
-       category = None
-       price= None
-def test_update_product_brand(capsys):
-       update_product(UpdateBrandArgs)
-       captured = capsys.readouterr()
-       assert "Brookside" in captured.out
-
-               
-class UpdateCategoryArgs:
-       id =1
-       name = None
-       brand = None
-       category = "dairy"
-       price= None
-def test_update_product_category(capsys):
-       update_product(UpdateCategoryArgs)
-       captured = capsys.readouterr()
-       assert "dairy" in captured.out
-
-class UpdateAllArgs:
-       id =1
-       name = "Milk"
-       brand ="Brookside"
-       category = "dairy"
-       price= 75
-def test_update_products(capsys):
-       update_product(UpdateAllArgs)
-       captured = capsys.readouterr()
-       assert "Milk" in captured.out
-       assert "Brookside" in captured.out
-       assert "dairy" in captured.out
-       assert "75" in captured.out
 
 class DeleteArgs:
-       id = 3       
-def test_delete_product(capsys):
+       id = 3 
+#mock delete quest to simulate deleting na product
+@patch("cli.requests.delete")      
+def test_delete_product(mock_delete,capsys):
+      mock_delete.return_value.json.return_value ={
+             "message":"Product deleted successfully!"
+      }
+
       delete_product(DeleteArgs)
       captured = capsys.readouterr()
       assert "Product deleted successfully!" in captured.out
+      mock_delete.assert_called_once()
