@@ -25,7 +25,29 @@ class UpdatePriceArgs:
 def test_update_product_price(capsys):
        update_product(UpdatePriceArgs)
        captured = capsys.readouterr()
+       assert "75" in captured.out
+
+
+class UpdateBrandArgs:
+       id =1
+       name = None
+       brand = "Brookside"
+       category = None
+       price= None
+def test_update_product_brand(capsys):
+       update_product(UpdateBrandArgs)
+       captured = capsys.readouterr()
        assert "Brookside" in captured.out
 
                
+class UpdateCategoryArgs:
+       id =1
+       name = None
+       brand = None
+       category = "dairy"
+       price= None
+def test_update_product_category(capsys):
+       update_product(UpdateCategoryArgs)
+       captured = capsys.readouterr()
+       assert "dairy" in captured.out
 
