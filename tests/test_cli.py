@@ -51,3 +51,16 @@ def test_update_product_category(capsys):
        captured = capsys.readouterr()
        assert "dairy" in captured.out
 
+class UpdateAllArgs:
+       id =1
+       name = "Milk"
+       brand ="Brookside"
+       category = "dairy"
+       price= 75
+def test_update_products(capsys):
+       update_product(UpdateAllArgs)
+       captured = capsys.readouterr()
+       assert "Milk" in captured.out
+       assert "Brookside" in captured.out
+       assert "dairy" in captured.out
+       assert "75" in captured.out
