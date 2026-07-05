@@ -67,3 +67,73 @@ python app.py
 ```
 https://127.0.0.1.5555
 ```
+## CLI Commands
+
+### View Products
+```
+python cli.py list
+```
+### Add Product
+```
+python cli.py add --name Rice --brand Dawat --category grains --price 450
+```
+### Update Product
+```
+ python cli.py update 1 --price 600
+```
+### Delete Product
+```
+python cli.py delete 1
+```
+
+## API Endpoint Details
+```bash
+Method | Endpoint   | Description
+-------------------------------------
+GET|   /products |  Retrieve all Products |
+POST|   /products |  Create a new Product |
+PATCH|   /products\<id> |  Update a product |  
+DELETE|   /products\<id> |  Delete product |
+POST|    /products/import?barcode= | Imports a product using barcode | 
+
+```  
+## Testing 
+- Run all tests
+```
+pytest
+```
+- Run API test
+```
+pytest tests/test_route.py
+```
+- Run CLI Tests
+```
+pytest tests/test_cli.py
+```
+- Run External API test
+```
+pytest tests/test_external_api.py
+```
+
+## Error Handling 
+The application handle:
+- Missing required Fields
+- Invalid Product IDs
+- API connection Failure
+- Missing barcode
+- External API Failure
+
+## Future Improvements
+- Databases intergration (mySQL)
+- User Authentication 
+- Product filtering
+- Inventory stock Management
+
+### What I learnt
+During this project i have learnt to build RESTful APIs with Flask.
+Create command line interface using argparse .intergrating external APIs.
+Write unit test using pytest and unittest.mock to simulate mock response 
+and isolate external dependencies during testing
+
+# Author 
+Munira Hassan
