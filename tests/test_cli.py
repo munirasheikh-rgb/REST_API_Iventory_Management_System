@@ -1,5 +1,8 @@
 from unittest.mock import patch
 from cli import list_products,add_product,update_product,delete_product
+
+URL =  "http://127.0.0.1:5555/products"
+
 class AddArgs:
     name ="Rice"
     brand = "Dawat"
@@ -36,7 +39,12 @@ def test_add_product(mock_post,capsys):
         assert "Rice"in captured.out
         assert "grains" in captured.out
         assert "Dawat" in captured.out
-        mock_post.assert_called_once()
+        mock_post.assert_called_once(URL,json={
+               "name":"Rice",
+               "brand":"Dawat",
+               "category":"grains",
+               "price":450
+        })
 
 class UpdatePriceArgs:
        id =1
@@ -58,7 +66,7 @@ def test_update_product_price(mock_patch,capsys):
        update_product(UpdatePriceArgs)
        captured = capsys.readouterr()
        assert "75" in captured.out
-       mock_patch.assert_called_once()
+       mock_patch.assert_called_once(f"{URL}/1",json={"price":75})
 
 
 class DeleteArgs:
