@@ -6,14 +6,14 @@ product details from an external API using a product barcode.
 # Features
 - RESTful API built with Flask
 - Command Line Interface(CLI) using argparse
-- Create ne inventory products
+- Create new inventory products
 - View all products
-- Update exixting products
+- Update existing products
 - Delete Products
 - Import product details using barcode 
 - Unit testing with pytest
 - Mock API testing using unittest.mock
-- Error handling for invalid requests and API connection
+- Error handling for invalid requests and API connection Failure
 
 ## Technologies Used
 - Python
@@ -65,7 +65,7 @@ python app.py
 ```
 - The API runs on 
 ```
-https://127.0.0.1.5555
+http://127.0.0.1.5555
 ```
 ## CLI Commands
 
@@ -116,7 +116,7 @@ pytest tests/test_external_api.py
 ```
 
 ## Error Handling 
-The application handle:
+The application handles:
 - Missing required Fields
 - Invalid Product IDs
 - API connection Failure
@@ -124,16 +124,18 @@ The application handle:
 - External API Failure
 
 ## Future Improvements
-- Databases intergration (mySQL)
+- Database intergration (MySQL)
 - User Authentication 
 - Product filtering
 - Inventory stock Management
 
 ### What I learnt
-During this project i have learnt to build RESTful APIs with Flask.
-Create command line interface using argparse .intergrating external APIs.
-Write unit test using pytest and unittest.mock to simulate mock response 
-and isolate external dependencies during testing
+During this project i have learnt to:
+- Build RESTful APIs using Flask.
+- Create command line interface using argparse .
+- Intergrating external APIs into Flask python application.
+- Write unit test using pytest and unittest.mock to simulate API response 
+- Isolate external dependencies during testing
 
 # Author 
 Munira Hassan
